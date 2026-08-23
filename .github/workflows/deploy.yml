@@ -1,0 +1,92 @@
+# =============================================================================
+# Deploy rawcode.ai to Cloud Run, then re-submit the sitemap to Search Console.
+#
+# Build/deploy mechanics live in cloudbuild.yaml (which builds Dockerfile and
+# runs `gcloud run deploy`); this workflow just authenticates and submits it.
+#
+# Configure in GitHub: Settings -> Secrets and variables -> Actions
+#
+# --- Secrets (required) ---
+# GCP_SA_KEY
+#   Full JSON body of a GCP service account key (IAM -> Service Accounts -> Keys).
+#   Needs Cloud Build Editor + Artifact Registry Writer; Cloud Build's own SA
+#   must additionally hold Cloud Run Admin and Service Account User so the
+#   deploy step in cloudbuild.yaml can run.
+# GOOGLE_SA_KEY_SEO
+#   Consumed by the reusable seo-ping workflow — see .github/workflows/seo-ping.yml.
+#
+# --- Variables (required) ---
+# GCP_PROJECT_ID        GCP project ID (e.g. rawcode-site-123).
+# SITE_URL              e.g. https://rawcode.ai                (seo-ping)
+# SEARCH_CONSOLE_SITE   Property as registered in Search Console (seo-ping):
+#                         - sc-domain:rawcode.ai    (Domain property)
+#                         - https://rawcode.ai/     (URL-prefix property)
+#
+# --- Variables (optional — defaults in "Submit Cloud Build") ---
+# GCP_REGION              default: us-central1   -> Cloud Run + Artifact Registry location
+# CLOUD_RUN_SERVICE       default: rawcode-site  -> gcloud run deploy service name
+# GCP_ARTIFACT_REPOSITORY default: rawcode-site  -> Artifact Registry Docker repo (must exist)
+# =============================================================================
+
+name: Deploy to Cloud Run
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-cloud-run-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check required configuration
+        env:
+          GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
+        run: |
+          set -euo pipefail
+          : "${GCP_PROJECT_ID:?set the GCP_PROJECT_ID repository variable}"
+
+      - name: Authenticate to Google Cloud (service account key)
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ vars.GCP_PROJECT_ID }}
+
+      - name: Submit Cloud Build (build image + deploy)
+        env:
+          GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
+          GCP_REGION: ${{ vars.GCP_REGION }}
+          CLOUD_RUN_SERVICE: ${{ vars.CLOUD_RUN_SERVICE }}
+          GCP_ARTIFACT_REPOSITORY: ${{ vars.GCP_ARTIFACT_REPOSITORY }}
+        run: |
+          set -euo pipefail
+          REGION="${GCP_REGION:-us-central1}"
+          SVC="${CLOUD_RUN_SERVICE:-rawcode-site}"
+          REPO="${GCP_ARTIFACT_REPOSITORY:-rawcode-site}"
+          # $SHORT_SHA is not auto-populated by `builds submit`, so pass it in.
+          SHORT_SHA="${GITHUB_SHA::7}"
+          gcloud builds submit \
+            --config=cloudbuild.yaml \
+            --project="${GCP_PROJECT_ID}" \
+            --substitutions=_REGION="${REGION}",_SERVICE_NAME="${SVC}",_AR_REPOSITORY="${REPO}",_SHORT_SHA="${SHORT_SHA}"
+
+  # Runs only after deploy succeeds, in the same run. Shares one definition with
+  # the manual "SEO ping" workflow so the two can't drift apart.
+  seo-ping:
+    needs: deploy
+    uses: ./.github/workflows/seo-ping.yml
+    secrets: inherit

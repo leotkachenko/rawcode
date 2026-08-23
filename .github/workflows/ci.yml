@@ -1,0 +1,80 @@
+# =============================================================================
+# CI — runs on every pull request and on pushes to main.
+# Gates merges/deploys on lint, type-check, a production build, and a smoke test
+# that the built container actually serves the site. No cloud credentials needed.
+# =============================================================================
+
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      NEXT_TELEMETRY_DISABLED: "1"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          # Matches the Dockerfile base image and .devcontainer.
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Type-check
+        run: npm run typecheck
+
+      - name: Build
+        run: npm run build
+
+      - name: Check scripts parse
+        run: |
+          set -euo pipefail
+          for f in scripts/seo/*.mjs scripts/seo/lib/*.mjs; do
+            node --check "$f"
+          done
+
+  # Catches Dockerfile/standalone-output breakage before it reaches Cloud Run —
+  # `npm run build` passing does not prove the container boots and serves.
+  container:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build image
+        run: docker build -t rawcode-site:ci .
+
+      - name: Boot container and probe routes
+        run: |
+          set -euo pipefail
+          docker run -d --name rawcode-ci -p 8080:8080 rawcode-site:ci
+          for _ in $(seq 1 30); do
+            if curl -sfS -o /dev/null http://localhost:8080/; then break; fi
+            sleep 2
+          done
+          curl -sfS -o /dev/null http://localhost:8080/
+          curl -sfS http://localhost:8080/sitemap.xml | head -5
+          curl -sfS -o /dev/null http://localhost:8080/robots.txt
+
+      - name: Container logs
+        if: always()
+        run: docker logs rawcode-ci || true

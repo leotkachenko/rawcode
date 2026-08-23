@@ -1,0 +1,92 @@
+# =============================================================================
+# SEO ping — registers the sitemap with Google Search Console and reports which
+# URLs are not indexed, against the LIVE site (Next serves /sitemap.xml from
+# src/app/sitemap.ts at runtime — there is no committed sitemap file to read).
+#
+# Two entry points:
+#   - workflow_dispatch  Actions -> SEO ping -> Run workflow (manual re-submit)
+#   - workflow_call      invoked by deploy.yml after a successful deploy, so the
+#                        post-deploy submit happens in the same run rather than
+#                        via a flaky cross-workflow `workflow_run` trigger.
+#
+# Configure in GitHub: Settings -> Secrets and variables -> Actions
+#
+# --- Secrets (required) ---
+# GOOGLE_SA_KEY_SEO
+#   Full JSON body of a service-account key that is a VERIFIED OWNER of the
+#   Search Console property, with the Search Console API enabled (plus the
+#   Indexing API only if you enable --indexing-api below). This is NOT the
+#   deploy SA (GCP_SA_KEY) — different permissions; use a separate account.
+#
+# --- Variables (required) ---
+# SITE_URL              e.g. https://rawcode.ai
+# SEARCH_CONSOLE_SITE   Property as registered in Search Console:
+#                         - sc-domain:rawcode.ai    (Domain property)
+#                         - https://rawcode.ai/     (URL-prefix property)
+# =============================================================================
+
+name: SEO ping
+
+on:
+  workflow_dispatch:
+  workflow_call:
+
+concurrency:
+  group: seo-ping
+  cancel-in-progress: false
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      SITE_URL: ${{ vars.SITE_URL }}
+      SEARCH_CONSOLE_SITE: ${{ vars.SEARCH_CONSOLE_SITE }}
+      NEXT_TELEMETRY_DISABLED: "1"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      # The SEO scripts are dependency-free (node:crypto + fetch), so there is
+      # nothing to install. `npm ci` is deliberately omitted.
+
+      - name: Check required configuration
+        run: |
+          set -euo pipefail
+          : "${SITE_URL:?set the SITE_URL repository variable}"
+          : "${SEARCH_CONSOLE_SITE:?set the SEARCH_CONSOLE_SITE repository variable}"
+
+      # The auth helper reads GOOGLE_APPLICATION_CREDENTIALS as a FILE PATH,
+      # so the JSON secret is written to a temp file (never committed/logged).
+      - name: Write service-account key to file
+        env:
+          SA_JSON: ${{ secrets.GOOGLE_SA_KEY_SEO }}
+        run: |
+          set -euo pipefail
+          : "${SA_JSON:?set the GOOGLE_SA_KEY_SEO secret}"
+          umask 077
+          printf '%s' "$SA_JSON" > "$RUNNER_TEMP/sa.json"
+
+      - name: Register sitemap with Search Console
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/sa.json
+        run: npm run seo:submit-sitemap
+
+      # Report indexing coverage for the live sitemap's URLs. Add
+      # `-- --indexing-api` to also ping the Indexing API — but read the warning
+      # in scripts/seo/index-uncrawled.mjs first: Google only supports that API
+      # for JobPosting/BroadcastEvent pages, not ordinary marketing pages.
+      - name: Report uncrawled URLs
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/sa.json
+        run: |
+          set -euo pipefail
+          curl -sfS "${SITE_URL%/}/sitemap.xml" \
+            | grep -oE '<loc>[^<]+</loc>' \
+            | sed -E 's|</?loc>||g' \
+            | node scripts/seo/index-uncrawled.mjs --stdin
