@@ -4,7 +4,10 @@
 #
 # Substitutions (all passed in by the workflow; defaults here are for manual
 # `gcloud builds submit` runs from a laptop):
-#   _REGION         Cloud Run + Artifact Registry location
+#   _REGION         Cloud Run region
+#   _AR_LOCATION    Artifact Registry location — SEPARATE from _REGION on purpose;
+#                   this project already runs a service in us-central1 off a repo
+#                   in northamerica-northeast2, so the two must be independent.
 #   _SERVICE_NAME   Cloud Run service name
 #   _AR_REPOSITORY  Artifact Registry Docker repo (must already exist)
 #   _SHORT_SHA      commit sha tag ("builds submit" does not populate $SHORT_SHA)
@@ -18,6 +21,7 @@
 
 substitutions:
   _REGION: us-central1
+  _AR_LOCATION: us-central1
   _SERVICE_NAME: rawcode-site
   _AR_REPOSITORY: rawcode-site
   _SHORT_SHA: manual
@@ -35,15 +39,15 @@ steps:
     args:
       - -c
       - |
-        docker pull "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_AR_REPOSITORY}/${_SERVICE_NAME}:latest" || true
+        docker pull "${_AR_LOCATION}-docker.pkg.dev/${PROJECT_ID}/${_AR_REPOSITORY}/${_SERVICE_NAME}:latest" || true
 
   - id: build
     name: gcr.io/cloud-builders/docker
     args:
       - build
-      - "--tag=${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_AR_REPOSITORY}/${_SERVICE_NAME}:${_SHORT_SHA}"
-      - "--tag=${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_AR_REPOSITORY}/${_SERVICE_NAME}:latest"
-      - "--cache-from=${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_AR_REPOSITORY}/${_SERVICE_NAME}:latest"
+      - "--tag=${_AR_LOCATION}-docker.pkg.dev/${PROJECT_ID}/${_AR_REPOSITORY}/${_SERVICE_NAME}:${_SHORT_SHA}"
+      - "--tag=${_AR_LOCATION}-docker.pkg.dev/${PROJECT_ID}/${_AR_REPOSITORY}/${_SERVICE_NAME}:latest"
+      - "--cache-from=${_AR_LOCATION}-docker.pkg.dev/${PROJECT_ID}/${_AR_REPOSITORY}/${_SERVICE_NAME}:latest"
       - "."
 
   - id: push
@@ -51,7 +55,7 @@ steps:
     args:
       - push
       - "--all-tags"
-      - "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_AR_REPOSITORY}/${_SERVICE_NAME}"
+      - "${_AR_LOCATION}-docker.pkg.dev/${PROJECT_ID}/${_AR_REPOSITORY}/${_SERVICE_NAME}"
 
   - id: deploy
     name: gcr.io/google.com/cloudsdktool/cloud-sdk
@@ -60,7 +64,7 @@ steps:
       - run
       - deploy
       - "${_SERVICE_NAME}"
-      - "--image=${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_AR_REPOSITORY}/${_SERVICE_NAME}:${_SHORT_SHA}"
+      - "--image=${_AR_LOCATION}-docker.pkg.dev/${PROJECT_ID}/${_AR_REPOSITORY}/${_SERVICE_NAME}:${_SHORT_SHA}"
       - "--region=${_REGION}"
       - "--platform=managed"
       - "--allow-unauthenticated"

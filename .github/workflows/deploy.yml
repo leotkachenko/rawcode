@@ -23,7 +23,11 @@
 #                         - https://rawcode.ai/     (URL-prefix property)
 #
 # --- Variables (optional — defaults in "Submit Cloud Build") ---
-# GCP_REGION              default: us-central1   -> Cloud Run + Artifact Registry location
+# GCP_REGION              default: us-central1   -> Cloud Run region
+# GCP_ARTIFACT_LOCATION   default: $GCP_REGION    -> Artifact Registry location. Set this
+#                                                   only if the repo lives somewhere other
+#                                                   than the Cloud Run region (this project
+#                                                   has such a split already).
 # CLOUD_RUN_SERVICE       default: rawcode-site  -> gcloud run deploy service name
 # GCP_ARTIFACT_REPOSITORY default: rawcode-site  -> Artifact Registry Docker repo (must exist)
 # =============================================================================
@@ -70,11 +74,14 @@ jobs:
         env:
           GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
           GCP_REGION: ${{ vars.GCP_REGION }}
+          GCP_ARTIFACT_LOCATION: ${{ vars.GCP_ARTIFACT_LOCATION }}
           CLOUD_RUN_SERVICE: ${{ vars.CLOUD_RUN_SERVICE }}
           GCP_ARTIFACT_REPOSITORY: ${{ vars.GCP_ARTIFACT_REPOSITORY }}
         run: |
           set -euo pipefail
           REGION="${GCP_REGION:-us-central1}"
+          # Artifact Registry can live in a different location than Cloud Run.
+          AR_LOCATION="${GCP_ARTIFACT_LOCATION:-$REGION}"
           SVC="${CLOUD_RUN_SERVICE:-rawcode-site}"
           REPO="${GCP_ARTIFACT_REPOSITORY:-rawcode-site}"
           # $SHORT_SHA is not auto-populated by `builds submit`, so pass it in.
@@ -82,7 +89,7 @@ jobs:
           gcloud builds submit \
             --config=cloudbuild.yaml \
             --project="${GCP_PROJECT_ID}" \
-            --substitutions=_REGION="${REGION}",_SERVICE_NAME="${SVC}",_AR_REPOSITORY="${REPO}",_SHORT_SHA="${SHORT_SHA}"
+            --substitutions=_REGION="${REGION}",_AR_LOCATION="${AR_LOCATION}",_SERVICE_NAME="${SVC}",_AR_REPOSITORY="${REPO}",_SHORT_SHA="${SHORT_SHA}"
 
   # Runs only after deploy succeeds, in the same run. Shares one definition with
   # the manual "SEO ping" workflow so the two can't drift apart.
