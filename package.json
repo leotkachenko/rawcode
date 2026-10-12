@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "next typegen && tsc --noEmit",
     "seo:submit-sitemap": "node scripts/seo/submit-sitemap.mjs",
     "seo:index-uncrawled": "node scripts/seo/index-uncrawled.mjs"
   },

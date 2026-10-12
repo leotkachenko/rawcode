@@ -7,10 +7,7 @@ export const siteConfig = {
     "Raw Code is a dev studio and AI consultancy that ships software, AI automation, and SEO/GEO-optimized websites — priced up front, backed by real work.",
   // TODO: confirm this inbox exists before launch.
   contactEmail: "hello@rawcode.ai",
-  // TODO: not a real scheduling link yet — replace with the actual Calendly (or
-  // equivalent) URL once one is set up. Left as "#" rather than a guessed slug so a
-  // fake/unverified link can't accidentally go live.
-  calendlyUrl: "#",
+  calendlyUrl: "https://calendly.com/dmytro-hrysiuk-lumirank/30min",
   // TODO: not a real Stripe Payment Link yet — replace once one is created in the
   // Stripe dashboard for the Small Builds tier.
   stripePaymentLinkUrl: "#",
@@ -18,7 +15,25 @@ export const siteConfig = {
   // listed in Toronto. Every LinkedIn link on the site renders only when its URL is
   // filled in, so an empty string here hides the link rather than shipping a 404.
   linkedinUrl: "https://www.linkedin.com/company/rawcode-ai",
+  // TODO: the registered Toronto street address and postal code. Confirmed that
+  // one exists, but it isn't on record here yet. The PostalAddress (schema and
+  // visible NAP) renders only once `streetAddress` is filled in, so leaving it
+  // empty ships the city alone rather than a half-address. Once set, use this
+  // exact string everywhere else it's listed (LinkedIn, Google Business Profile).
+  address: {
+    streetAddress: "",
+    addressLocality: "Toronto",
+    addressRegion: "ON",
+    postalCode: "",
+    addressCountry: "CA",
+  },
 };
+
+export function formattedAddress(): string | undefined {
+  const { streetAddress, addressLocality, addressRegion, postalCode } = siteConfig.address;
+  if (!streetAddress) return undefined;
+  return `${streetAddress}, ${addressLocality}, ${addressRegion}${postalCode ? ` ${postalCode}` : ""}, Canada`;
+}
 
 export type TeamMember = {
   slug: string;

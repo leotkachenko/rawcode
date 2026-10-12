@@ -16,6 +16,21 @@ export type CaseStudy = {
   credit?: string;
   // Slug of the team member named in `credit`, so the case study can link to /team.
   creditMember?: string;
+  // Slug of the service line this project is an example of, so case studies and
+  // service pages can link to each other.
+  service?: string;
+  // Greater Toronto Area client — listed on the Toronto pages. Confirmed with
+  // Leo; InteraXon/Muse is deliberately not flagged (no sign-off to name it there).
+  toronto?: boolean;
+  // Raw Code still maintains the live product — confirmed with Leo, Oct 2026.
+  maintained?: boolean;
+  // Facts read off the client's live site, with the date they were checked.
+  // Counts come from the site's public sitemap.xml — re-check before changing.
+  liveSite?: {
+    checked: string;
+    pageCount: number;
+    points: string[];
+  };
   outcomeNote: string;
 };
 
@@ -30,7 +45,10 @@ const CLIENT_REPORTED_OUTCOME_NOTE =
 const PAVLO = {
   credit: "Delivered by Pavlo Holubchykov, Raw Code's Lead ML/AI Developer.",
   creditMember: "pavlo-holubchykov",
+  service: "ai-automation",
 };
+
+const SITEMAPS_CHECKED = "2026-10-12";
 
 export const caseStudies: CaseStudy[] = [
   {
@@ -45,6 +63,17 @@ export const caseStudies: CaseStudy[] = [
       "User-facing product design and onboarding flow",
       "Production deployment and hosting",
     ],
+    service: "fixed-scope-builds",
+    toronto: true,
+    maintained: true,
+    liveSite: {
+      checked: SITEMAPS_CHECKED,
+      pageCount: 174,
+      points: [
+        "Marketing and product pages published in 8 languages: English, French, Spanish, German, Polish, Turkish, Ukrainian, and Russian",
+        "A blog section with its own sitemap, separate from the product pages",
+      ],
+    },
     outcomeNote: UNVERIFIED_OUTCOME_NOTE,
   },
   {
@@ -59,20 +88,45 @@ export const caseStudies: CaseStudy[] = [
       "Structured data implementation for AI-answer-engine citation",
       "Content structure designed for both classic search and GEO",
     ],
+    service: "seo-geo-website-builds",
+    toronto: true,
+    maintained: true,
+    liveSite: {
+      checked: SITEMAPS_CHECKED,
+      pageCount: 125,
+      points: [
+        "An answers library of 21 single-question pages, each opening with a short answer before the detail",
+        "Toronto-targeted service pages, including GEO agency, SEO agency, and local SEO in Toronto",
+        "A glossary, comparison pages, and \"best of\" roundups that link back into the service pages",
+      ],
+    },
     outcomeNote: UNVERIFIED_OUTCOME_NOTE,
   },
   {
     slug: "osobarenos",
-    name: "Osobar Enos",
+    name: "Osoba Renos & Design",
     url: "https://osobarenos.ca",
     image: "/case-studies/osobarenos.jpg",
     summary:
-      "A Toronto renovation contractor with strong local/geo-page SEO: city-level landing pages, review aggregation, and service-plus-location interlinking.",
+      "A Mississauga renovation contractor serving the GTA, with strong local SEO: city landing pages, review aggregation, and service-plus-location interlinking.",
     whatWeBuilt: [
       "City-level local landing pages with service + location interlinking",
       "Review aggregation for local trust signals",
       "Local SEO structure across the service area",
     ],
+    service: "seo-geo-website-builds",
+    toronto: true,
+    maintained: true,
+    liveSite: {
+      checked: SITEMAPS_CHECKED,
+      pageCount: 182,
+      points: [
+        "Kitchen renovation pages for 18 GTA cities and neighbourhoods, from Ajax to Whitby, with matching bathroom, basement, and condo pages",
+        "Project write-ups tied to the neighbourhood they were in, such as a North York condo and an Oakville main bathroom",
+        "\"Near me\" hub pages for kitchen, bathroom, basement, and condo renovations",
+        "Homeowner guides, such as a week-by-week bathroom renovation timeline and a 2026 Etobicoke permit guide",
+      ],
+    },
     outcomeNote: UNVERIFIED_OUTCOME_NOTE,
   },
   {
@@ -84,6 +138,19 @@ export const caseStudies: CaseStudy[] = [
       "An interior design studio in Toronto and Los Angeles offering residential, commercial, and hospitality interiors, styling, and renovations.",
     // TODO: confirm actual scope of work with Leo before publishing — not yet on record.
     whatWeBuilt: [],
+    service: "seo-geo-website-builds",
+    toronto: true,
+    maintained: true,
+    liveSite: {
+      checked: SITEMAPS_CHECKED,
+      pageCount: 79,
+      points: [
+        "City pages for Toronto, Mississauga, Brampton, Markham, Vaughan, Richmond Hill, Oakville, Burlington, and Los Angeles",
+        "Six service pages, from residential and hospitality interiors to virtual design consultations",
+        "A four-step process section, a project portfolio, and a blog",
+        "A Ukrainian-language version of the site alongside the English one",
+      ],
+    },
     outcomeNote: UNVERIFIED_OUTCOME_NOTE,
   },
   {
@@ -100,6 +167,7 @@ export const caseStudies: CaseStudy[] = [
       "Backend and services development in Python and Go",
       "GCP-based deployment and infrastructure support",
     ],
+    service: "staff-augmentation",
     outcomeNote: UNVERIFIED_OUTCOME_NOTE,
   },
   {
@@ -242,6 +310,14 @@ export const caseStudies: CaseStudy[] = [
 
 export function getCaseStudyBySlug(slug: string): CaseStudy | undefined {
   return caseStudies.find((project) => project.slug === slug);
+}
+
+export function caseStudiesByService(serviceSlug: string): CaseStudy[] {
+  return caseStudies.filter((project) => project.service === serviceSlug);
+}
+
+export function torontoCaseStudies(): CaseStudy[] {
+  return caseStudies.filter((project) => project.toronto);
 }
 
 export function caseStudiesByMember(memberSlug: string): CaseStudy[] {

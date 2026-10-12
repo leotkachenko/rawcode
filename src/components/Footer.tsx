@@ -5,6 +5,8 @@ import { NewsletterForm } from "./NewsletterForm";
 import { LinkedInLink } from "./LinkedInLink";
 
 const companyLinks = [
+  { href: "/software-development-toronto", label: "Software Development in Toronto" },
+  { href: "/website-development-toronto", label: "Website Development in Toronto" },
   { href: "/work", label: "Work" },
   { href: "/team", label: "Team" },
   { href: "/what-is-raw-code", label: "What is Raw Code" },

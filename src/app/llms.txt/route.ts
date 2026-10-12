@@ -20,6 +20,8 @@ export function GET() {
   lines.push("## Main pages");
   lines.push(`- [Home](${siteConfig.url}/)`);
   lines.push(`- [Services](${siteConfig.url}/services)`);
+  lines.push(`- [Software Development in Toronto](${siteConfig.url}/software-development-toronto)`);
+  lines.push(`- [Website Development in Toronto](${siteConfig.url}/website-development-toronto)`);
   lines.push(`- [Work](${siteConfig.url}/work)`);
   lines.push(`- [Team](${siteConfig.url}/team)`);
   lines.push(`- [What is Raw Code?](${siteConfig.url}/what-is-raw-code)`);

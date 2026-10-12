@@ -121,7 +121,7 @@ export default function TeamPage() {
           href="/contact"
           className="mt-3 inline-block rounded-full bg-foreground px-5 py-2.5 text-sm font-medium text-background transition-opacity hover:opacity-90"
         >
-          Book a call
+          Book free consultation
         </Link>
       </div>
     </div>

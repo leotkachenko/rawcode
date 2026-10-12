@@ -35,6 +35,7 @@ The architecture: thin orchestrator agents (like [local-seo-pages](../../agents/
 | "Set sitemap priority" / "what content matters most" / "above the fold" | [content-priorities.md](references/content-priorities.md) |
 | "Heading structure" / "semantic HTML" / "document outline" | [content-hierarchy.md](references/content-hierarchy.md) |
 | "Two of our pages are competing" / "cannibalization" / "which page should rank" | [cannibalization.md](references/cannibalization.md), [keywords-triage.md](references/keywords-triage.md) |
+| "Pages aren't indexed" / "Discovered – not indexed" / "URL is unknown to Google" | [indexation.md](references/indexation.md) |
 
 ## Reference library
 
@@ -56,6 +57,7 @@ The architecture: thin orchestrator agents (like [local-seo-pages](../../agents/
 | [search-intent.md](references/search-intent.md) | Informational / commercial / transactional / navigational → page type |
 | [nap-citations.md](references/nap-citations.md) | Byte-identical NAP, directory citations, Google Business Profile |
 | [cannibalization.md](references/cannibalization.md) | Detect / prevent / fix two same-site pages competing for one query |
+| [indexation.md](references/indexation.md) | Diagnose unindexed pages: GSC verdicts → verified-Googlebot logs → crawl-demand vs quality vs technical fixes |
 | [consensus-review.md](references/consensus-review.md) | Four-agent independent review panel (SEO compliance, UI/UX, content quality, infra/schema) that gates shipping |
 | [self-improvement.md](references/self-improvement.md) | Protocol for adding new knowledge to this library |
 

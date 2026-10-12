@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getServiceBySlug, services } from "@/lib/services";
+import { caseStudiesByService } from "@/lib/case-studies";
 import { FaqList } from "@/components/FaqList";
 import { JsonLd } from "@/components/JsonLd";
 import { ServiceIcon } from "@/components/ServiceIcon";
@@ -53,6 +54,8 @@ export default async function ServicePage({
   if (!service) {
     notFound();
   }
+
+  const relatedWork = caseStudiesByService(service.slug);
 
   return (
     <div className="mx-auto max-w-3xl px-6 py-16">
@@ -133,6 +136,27 @@ export default async function ServicePage({
         </ol>
       </section>
 
+      {relatedWork.length > 0 && (
+        <section className="mt-10">
+          <h2 className="text-xl font-semibold tracking-tight">Related work</h2>
+          <ul className="mt-4 space-y-2">
+            {relatedWork.map((project) => (
+              <li key={project.slug}>
+                <Link
+                  href={`/work/${project.slug}`}
+                  className="text-black/70 underline decoration-black/20 underline-offset-4 hover:text-black hover:decoration-black dark:text-white/70 dark:decoration-white/20 dark:hover:text-white dark:hover:decoration-white"
+                >
+                  {project.name}
+                </Link>
+                {project.client && (
+                  <span className="text-black/50 dark:text-white/50"> — {project.client}</span>
+                )}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
       <section className="mt-10">
         <h2 className="text-xl font-semibold tracking-tight">FAQ</h2>
         <div className="mt-4">
@@ -146,7 +170,7 @@ export default async function ServicePage({
           href="/contact"
           className="mt-3 inline-block rounded-full bg-foreground px-5 py-2.5 text-sm font-medium text-background transition-opacity hover:opacity-90"
         >
-          Book a call
+          Book free consultation
         </Link>
       </div>
     </div>

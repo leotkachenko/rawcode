@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { caseStudies, getCaseStudyBySlug } from "@/lib/case-studies";
 import { getTeamMemberBySlug } from "@/lib/site-config";
+import { getServiceBySlug } from "@/lib/services";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { JsonLd } from "@/components/JsonLd";
 import { caseStudySchema } from "@/lib/schema";
@@ -59,7 +60,24 @@ export default async function CaseStudyPage({
   const creditMember = project.creditMember
     ? getTeamMemberBySlug(project.creditMember)
     : undefined;
-  const others = caseStudies.filter((other) => other.slug !== project.slug).slice(0, 3);
+  const service = project.service ? getServiceBySlug(project.service) : undefined;
+  // Same-service projects first, then the ones that follow this one in the list
+  // (wrapping round), so every case study is linked from its neighbours instead of
+  // every page pointing at the same first three.
+  const index = caseStudies.findIndex((other) => other.slug === project.slug);
+  const rotated = [...caseStudies.slice(index + 1), ...caseStudies.slice(0, index)];
+  const others = [
+    ...rotated.filter((other) => service && other.service === service.slug),
+    ...rotated.filter((other) => !service || other.service !== service.slug),
+  ].slice(0, 3);
+  const checkedDate = project.liveSite
+    ? new Date(`${project.liveSite.checked}T12:00:00Z`).toLocaleDateString("en-CA", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        timeZone: "UTC",
+      })
+    : undefined;
 
   return (
     <div className="mx-auto max-w-3xl px-6 py-16">
@@ -116,6 +134,46 @@ export default async function CaseStudyPage({
             ))}
           </ul>
         </section>
+      )}
+
+      {project.liveSite && (
+        <section className="mt-10">
+          <h2 className="text-xl font-semibold tracking-tight">The live site today</h2>
+          <p className="mt-2 text-sm text-black/60 dark:text-white/60">
+            {project.liveSite.pageCount} pages in its public sitemap, checked {checkedDate}
+            {project.maintained ? ". Raw Code still maintains it." : "."}
+          </p>
+          <ul className="mt-4 list-disc space-y-2 pl-5 text-black/70 dark:text-white/70">
+            {project.liveSite.points.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {service && (
+        <p className="mt-10 text-black/70 dark:text-white/70">
+          Related service:{" "}
+          <Link
+            href={`/services/${service.slug}`}
+            className="font-medium text-accent hover:underline"
+          >
+            {service.name}
+          </Link>
+          .
+          {project.toronto && (
+            <>
+              {" "}A Greater Toronto Area client; see{" "}
+              <Link
+                href="/software-development-toronto"
+                className="font-medium text-accent hover:underline"
+              >
+                our work in Toronto
+              </Link>
+              .
+            </>
+          )}
+        </p>
       )}
 
       {project.metrics && project.metrics.length > 0 && (
@@ -178,7 +236,7 @@ export default async function CaseStudyPage({
           href="/contact"
           className="mt-3 inline-block rounded-full bg-foreground px-5 py-2.5 text-sm font-medium text-background transition-opacity hover:opacity-90"
         >
-          Book a call
+          Book free consultation
         </Link>
       </div>
     </div>

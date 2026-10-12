@@ -43,12 +43,18 @@ export default function HomePage() {
           straight to a fixed-scope build — every tier below has a clear price signal and a
           defined process, not an open-ended quote.
         </p>
+        <p className="mt-3 max-w-xl text-sm text-black/60 dark:text-white/60">
+          Based in Toronto, where we build and maintain sites for four GTA businesses.{" "}
+          <Link href="/software-development-toronto" className="underline hover:no-underline">
+            Software development in Toronto
+          </Link>
+        </p>
         <div className="mt-8">
           <Link
             href="/contact"
             className="inline-block rounded-full bg-foreground px-6 py-3 text-sm font-medium text-background transition-opacity hover:opacity-90"
           >
-            Book a call
+            Book free consultation
           </Link>
         </div>
       </section>
