@@ -125,6 +125,13 @@ export default async function CaseStudyPage({
         <p className="mt-4 text-sm text-black/50 dark:text-white/50">{project.timeline}</p>
       )}
 
+      {project.challenge && (
+        <section className="mt-10">
+          <h2 className="text-xl font-semibold tracking-tight">The problem</h2>
+          <p className="mt-4 text-black/70 dark:text-white/70">{project.challenge}</p>
+        </section>
+      )}
+
       {project.whatWeBuilt.length > 0 && (
         <section className="mt-10">
           <h2 className="text-xl font-semibold tracking-tight">What we built</h2>

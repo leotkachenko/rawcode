@@ -7,6 +7,9 @@ export type CaseStudy = {
   image?: string;
   imageAlt?: string;
   summary: string;
+  // What the client needed and why it was hard. ML entries are sourced from
+  // Pavlo's project deck; no outcome claims here, those go in `metrics`.
+  challenge?: string;
   whatWeBuilt: string[];
   // TODO: real engagement date range — confirm before publishing.
   timeline?: string;
@@ -179,6 +182,8 @@ export const caseStudies: CaseStudy[] = [
     imageAlt: "Roof tiles moving through a factory line",
     summary:
       "Unsupervised computer-vision quality control that flags broken roof tiles on a high-volume factory line, trained from a sparse labelled dataset.",
+    challenge:
+      "Wienerberger's line produces roof tiles at high volume, and broken ones were caught by people watching the line. Labelled examples of defects were scarce, so a standard supervised classifier wasn't an option. The model had to learn what a sound tile looks like and flag anything that didn't fit.",
     whatWeBuilt: [
       "Unsupervised anomaly detection model in Python and PyTorch",
       "Vision Transformer feature extraction with One-Class SVM scoring",
@@ -193,6 +198,8 @@ export const caseStudies: CaseStudy[] = [
     client: "MTV",
     summary:
       "A prototype that transcribes, summarizes, and analyzes large volumes of video content to generate metadata automatically.",
+    challenge:
+      "MTV has large volumes of video that need transcripts, summaries, and metadata before anyone can search or reuse them. The prototype tested whether that work could run without people doing it by hand: transcribe the audio with WhisperX, then summarize and analyze the text with the ChatGPT API.",
     whatWeBuilt: [
       "Speech-to-text pipeline built on WhisperX",
       "Summarization and contextual analysis via the ChatGPT API",
@@ -206,6 +213,8 @@ export const caseStudies: CaseStudy[] = [
     name: "Real-Time People Monitoring & Queue Management",
     summary:
       "A real-time vision system that tracks people in a hall or public space and separates general occupancy from the people actually standing in a queue.",
+    challenge:
+      "In a busy hall, a headcount isn't the number that matters. Staff need to know how many people are actually waiting in line, not just standing nearby. The system splits the space into configurable zones so queue length and general occupancy are counted separately, as it happens.",
     whatWeBuilt: [
       "Zone-based detection with configurable queue and occupancy areas",
       "YOLO-based person detection and counting in Python and OpenCV",
@@ -223,6 +232,8 @@ export const caseStudies: CaseStudy[] = [
     imageAlt: "A chatbot interface on a phone screen",
     summary:
       "Context-aware chatbots that combine ChatGPT with a retrieval layer so answers are grounded in the client's own reference material.",
+    challenge:
+      "A general-purpose chatbot answers from whatever the model already knows. Darnytsia needed answers that matched its own reference material, so the bots look up the relevant source documents first and answer from those.",
     whatWeBuilt: [
       "Python backend combining NLP with retrieval-augmented generation",
       "Retrieval layer for real-time access to source documents",
@@ -237,6 +248,8 @@ export const caseStudies: CaseStudy[] = [
     client: "Kormotech",
     summary:
       "A Teams chatbot that translates PDF and DOCX files in place while preserving the original layout and formatting.",
+    challenge:
+      "Translating a PDF or Word file usually means leaving Teams, pasting text into another tool, and rebuilding the layout afterwards. Kormotech's bot does it in Teams: send a file, get it back translated with its formatting intact, including text inside images.",
     whatWeBuilt: [
       "Teams bot on the Microsoft Bot Framework and Azure Bot Service",
       "Translation via the ChatGPT API with OCR for text in images",
@@ -251,6 +264,8 @@ export const caseStudies: CaseStudy[] = [
     client: "TietoEvry",
     summary:
       "Research and development work on speech synthesis and recognition, plus deep-learning face recognition backed by a vector database.",
+    challenge:
+      "This was research and development rather than one product. The work compared approaches to speech synthesis and recognition, then improved face recognition with deep-learning embeddings stored in a vector database, running Milvus on Kubernetes so it could scale.",
     whatWeBuilt: [
       "Research into speech synthesis and recognition methods",
       "Face recognition improvements using deep learning and vector search",
@@ -265,6 +280,8 @@ export const caseStudies: CaseStudy[] = [
     client: "War of Words",
     summary:
       "A multilingual transcription and search system that turns raw video into diarized, translated, searchable transcripts.",
+    challenge:
+      "War of Words works with video in several languages. The system turns raw footage into transcripts that show who is speaking, translates them into English, and makes the audio searchable by similarity, so relevant segments can be found across languages.",
     whatWeBuilt: [
       "AzureML transcription pipeline using WhisperX with PyAnnote diarization",
       "MongoDB vector database for similarity search over audio embeddings",
@@ -279,6 +296,8 @@ export const caseStudies: CaseStudy[] = [
     client: "Jera",
     summary:
       "Forecasting models for electricity consumption and anomalies, wired into automated training and serving pipelines.",
+    challenge:
+      "Forecasting electricity consumption means combining weather, historical usage, and other outside factors, and forecasts go stale unless the models keep learning. The work covered the models and the Kubeflow pipelines that collect data, train, serve, and retrain them on a schedule.",
     whatWeBuilt: [
       "Consumption and anomaly forecasting from weather, historical usage, and external factors",
       "Kubeflow pipelines for data collection, training, serving, and retraining",
@@ -294,6 +313,8 @@ export const caseStudies: CaseStudy[] = [
     client: "Skanska",
     summary:
       "NLP models that read incoming service tickets and route them to the right team automatically, replacing manual triage.",
+    challenge:
+      "Skanska's service tickets were sorted by hand. At high volume that meant misrouted tickets and slower fixes. The goal was to read each incoming ticket and send it to the right team automatically.",
     whatWeBuilt: [
       "NLP classification models for service ticket content",
       "ServiceNow API integration for real-time routing",
