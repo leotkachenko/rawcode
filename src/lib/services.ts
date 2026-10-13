@@ -12,6 +12,9 @@ export type Service = {
   slug: string;
   name: string;
   shortName: string;
+  // Optional <title> override when the page targets a query the service name
+  // doesn't contain. Falls back to `name`.
+  metaTitle?: string;
   tileDescription: string;
   priceSignal: string;
   summary: string;
@@ -200,57 +203,84 @@ export const services: Service[] = [
     slug: "ai-automation",
     name: "AI Automation Consulting & Implementation",
     shortName: "AI Automation",
+    metaTitle: "AI Workflow Automation for Businesses",
     tileDescription:
-      "Practical automation of a specific workflow, not a generic AI strategy deck.",
+      "Automate one repetitive workflow, such as document processing, ticket triage, or reporting. Not a generic AI strategy deck.",
     priceSignal: "$3k–$30k project or retainer",
     summary:
-      "We identify a specific, well-bounded workflow that's slow, manual, or error-prone, and build the AI-backed automation that fixes it — internal tools, document/data pipelines, or LLM-backed features inside an existing product. Engagements run as a fixed-price project or an ongoing retainer, depending on scope.",
+      "Raw Code builds AI workflow automation for small and mid-sized businesses: data entry, inbox and ticket triage, reporting, lead routing, and document processing. We connect it to the tools you already use and keep a person in the loop for anything high-stakes. Engagements run as a fixed-price project or a monthly retainer.",
     metaDescription:
-      "We automate one specific manual workflow — document processing, data entry, or an LLM feature — for $3k–$30k. Not a generic AI strategy deck.",
+      "AI workflow automation for small and mid-sized businesses: document processing, ticket triage, lead routing, and reports. Start with a paid audit or pilot.",
     included: [
-      "A scoping session to identify one concrete workflow to automate",
-      "Design and implementation of the automation, including any LLM integration",
-      "Integration with your existing tools and data, not a standalone demo",
-      "Documentation so your team can maintain and extend it",
+      "A paid audit to pick one concrete workflow and define what \"done\" looks like",
+      "A prototype tested on your real data before the full build",
+      "Integration with your existing tools and accounts, not a standalone demo",
+      "Documentation, monitoring, and the source code at handover",
     ],
     process: [
       {
-        title: "Workflow audit",
-        detail: "We find the specific manual process worth automating, and what \"done\" looks like.",
+        title: "Discovery and audit",
+        detail:
+          "We map the workflow as it runs today, find the steps worth automating, and agree what \"done\" looks like.",
       },
       {
-        title: "Design",
-        detail: "We design the automation and, where relevant, choose and evaluate the LLM/model approach.",
+        title: "Prototype on real data",
+        detail:
+          "We test the approach on a sample of your actual documents, emails, or tickets, so you see how it handles your edge cases before committing to a build.",
       },
       {
-        title: "Implementation",
-        detail: "We build and integrate it against real data and existing systems, not a synthetic demo.",
+        title: "Build and integrate",
+        detail:
+          "We build the automation into the tools your team already uses, with a human review step wherever a mistake would be costly.",
       },
       {
-        title: "Handoff or retainer",
-        detail: "We hand off with documentation, or continue on retainer to extend and maintain it.",
+        title: "Handover, monitoring, and iteration",
+        detail:
+          "You get the code, documentation, and monitoring. We hand it over, or stay on retainer to tune it and automate the next workflow.",
       },
     ],
+    // TODO: confirm a typical timeline range with the team, then replace the
+    // timeline answer below with real numbers. No range is on record yet.
     faqs: [
       {
-        question: "What kind of workflows do you automate?",
+        question: "How much does AI workflow automation cost?",
         answer:
-          "Specific, bounded ones: document processing, data entry and reconciliation, internal reporting, or adding an LLM-backed feature to an existing product — not open-ended \"AI strategy.\"",
+          "Most projects cost $3,000 to $30,000, as a fixed-price project or a monthly retainer. A single workflow that touches one or two systems sits at the low end. Several connected workflows, or ongoing tuning, sit at the high end. These ranges are directional. You get a fixed quote after a small paid audit or pilot.",
       },
       {
-        question: "Do I need my own AI/ML team already?",
+        question: "How long does an automation project take?",
         answer:
-          "No. Most clients don't have one — that's the point of the engagement. We scope, build, and document the automation so your existing team can run and extend it afterward.",
+          "It depends on the workflow, and you get the timeline in writing before the build starts. The prototype comes first, so you see the automation working on your own data early, not at the end of the project.",
       },
       {
-        question: "Project or retainer — how do you decide?",
+        question: "Do we need clean data before we start?",
         answer:
-          "A single, well-defined automation is usually a fixed-price project. Ongoing extension, monitoring, or multiple workflows over time is better suited to a retainer.",
+          "No. Most businesses don't have clean data, and most automations don't need it. Reading messy emails, PDFs, and free-text fields is exactly where AI helps. The audit shows where gaps in your data would cause problems, and the prototype tests that on real examples.",
       },
       {
-        question: "Can you show a real before/after example?",
+        question: "Will AI automation replace our staff?",
         answer:
-          "We're building out a documented before/after case study for this line of work; check the case studies page for current, verified examples in the meantime.",
+          "It replaces tasks, not judgment. The automation takes on repetitive steps like copying, sorting, and summarizing. Your team still makes the decisions and reviews anything high-stakes. What you do with the time it frees up is your call.",
+      },
+      {
+        question: "Which AI models do you use?",
+        answer:
+          "We pick the model for the task, not the other way round. That's often a hosted model from OpenAI, Anthropic, or Google, sometimes an open-source model running in your own cloud, and plain code with no AI at all when a rule does the job more reliably.",
+      },
+      {
+        question: "How do you handle our data and security?",
+        answer:
+          "The automation gets the least access it needs, and your data stays in your own accounts wherever possible. We don't use your data to train models. We work with GDPR, PIPEDA, and Quebec Law 25 in mind, and we tell you up front which third-party services will see your data.",
+      },
+      {
+        question: "Who owns the code and the automation?",
+        answer:
+          "You do. At handover you get the full source code, documentation, and admin access to everything running in your accounts. You can keep us on retainer to maintain it, or run it yourself.",
+      },
+      {
+        question: "Do we need our own AI or engineering team?",
+        answer:
+          "No. Most of our clients don't have one, and that's the point of the engagement. We scope, build, and document the automation so the people who already run the workflow can operate it.",
       },
     ],
   },

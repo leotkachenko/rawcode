@@ -7,6 +7,7 @@ import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { ClientCard } from "@/components/ClientCard";
 import { FaqList } from "@/components/FaqList";
 import { JsonLd } from "@/components/JsonLd";
+import { solutionPages } from "@/lib/solution-pages";
 import { faqPageSchema, localBusinessSchema, serviceSchema, TORONTO_AREA_SERVED } from "@/lib/schema";
 
 const torontoClients = torontoCaseStudies();
@@ -190,6 +191,24 @@ export default function SoftwareDevelopmentTorontoPage() {
           </Link>{" "}
           covers how we build sites like the four above.
         </p>
+        <h3 className="mt-8 text-sm font-semibold uppercase tracking-wide text-black/60 dark:text-white/60">
+          Specialties
+        </h3>
+        <ul className="mt-3 grid gap-3 sm:grid-cols-3">
+          {solutionPages.map((page) => (
+            <li key={page.path}>
+              <Link
+                href={page.path}
+                className="block rounded-xl border border-black/10 p-4 text-sm transition-colors hover:border-black/25 dark:border-white/10 dark:hover:border-white/25"
+              >
+                <span className="block font-medium">{page.h1}</span>
+                <span className="mt-1 block text-black/60 dark:text-white/60">
+                  {page.projectSlugs.length} case {page.projectSlugs.length === 1 ? "study" : "studies"}
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
       </section>
 
       <section className="mt-20 grid gap-10 lg:grid-cols-2">

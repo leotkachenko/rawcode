@@ -1,6 +1,7 @@
 import { siteConfig } from "@/lib/site-config";
 import { services } from "@/lib/services";
 import { caseStudies } from "@/lib/case-studies";
+import { solutionPages } from "@/lib/solution-pages";
 import { team } from "@/lib/site-config";
 
 export const dynamic = "force-static";
@@ -22,6 +23,9 @@ export function GET() {
   lines.push(`- [Services](${siteConfig.url}/services)`);
   lines.push(`- [Software Development in Toronto](${siteConfig.url}/software-development-toronto)`);
   lines.push(`- [Website Development in Toronto](${siteConfig.url}/website-development-toronto)`);
+  for (const page of solutionPages) {
+    lines.push(`- [${page.h1}](${siteConfig.url}${page.path})`);
+  }
   lines.push(`- [Work](${siteConfig.url}/work)`);
   lines.push(`- [Team](${siteConfig.url}/team)`);
   lines.push(`- [What is Raw Code?](${siteConfig.url}/what-is-raw-code)`);

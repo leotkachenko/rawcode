@@ -1,12 +1,17 @@
 import Link from "next/link";
 import { siteConfig } from "@/lib/site-config";
 import { services } from "@/lib/services";
+import { solutionPages } from "@/lib/solution-pages";
 import { NewsletterForm } from "./NewsletterForm";
 import { LinkedInLink } from "./LinkedInLink";
 
+const torontoLinks = [
+  { href: "/software-development-toronto", label: "Software development" },
+  { href: "/website-development-toronto", label: "Website development" },
+  ...solutionPages.map((page) => ({ href: page.path, label: page.navLabel })),
+];
+
 const companyLinks = [
-  { href: "/software-development-toronto", label: "Software Development in Toronto" },
-  { href: "/website-development-toronto", label: "Website Development in Toronto" },
   { href: "/work", label: "Work" },
   { href: "/team", label: "Team" },
   { href: "/what-is-raw-code", label: "What is Raw Code" },
@@ -63,6 +68,21 @@ export function Footer() {
           </div>
         </div>
       </div>
+      <nav
+        aria-label="Toronto services"
+        className="mx-auto max-w-5xl px-6 pb-6 text-sm text-black/60 dark:text-white/60"
+      >
+        <p className="font-semibold text-black dark:text-white">In Toronto</p>
+        <ul className="mt-2 flex flex-wrap gap-x-5 gap-y-2">
+          {torontoLinks.map((link) => (
+            <li key={link.href}>
+              <Link href={link.href} className="hover:text-black dark:hover:text-white">
+                {link.label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
       <div className="mx-auto max-w-5xl px-6 pb-8 text-xs text-black/40 dark:text-white/40">
         © {new Date().getUTCFullYear()} {siteConfig.name}. All rights reserved.
       </div>

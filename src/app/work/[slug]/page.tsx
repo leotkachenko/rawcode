@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import { caseStudies, getCaseStudyBySlug } from "@/lib/case-studies";
 import { getTeamMemberBySlug } from "@/lib/site-config";
 import { getServiceBySlug } from "@/lib/services";
+import { solutionPages } from "@/lib/solution-pages";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { JsonLd } from "@/components/JsonLd";
 import { caseStudySchema } from "@/lib/schema";
@@ -61,6 +62,7 @@ export default async function CaseStudyPage({
     ? getTeamMemberBySlug(project.creditMember)
     : undefined;
   const service = project.service ? getServiceBySlug(project.service) : undefined;
+  const solutionPage = solutionPages.find((page) => page.projectSlugs.includes(project.slug));
   // Same-service projects first, then the ones that follow this one in the list
   // (wrapping round), so every case study is linked from its neighbours instead of
   // every page pointing at the same first three.
@@ -180,6 +182,16 @@ export default async function CaseStudyPage({
               .
             </>
           )}
+        </p>
+      )}
+
+      {solutionPage && (
+        <p className="mt-3 text-black/70 dark:text-white/70">
+          More work like this:{" "}
+          <Link href={solutionPage.path} className="font-medium text-accent hover:underline">
+            {solutionPage.h1}
+          </Link>
+          .
         </p>
       )}
 

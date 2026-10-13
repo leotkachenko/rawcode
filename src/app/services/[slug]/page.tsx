@@ -7,6 +7,7 @@ import { FaqList } from "@/components/FaqList";
 import { JsonLd } from "@/components/JsonLd";
 import { ServiceIcon } from "@/components/ServiceIcon";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { AiAutomationService } from "@/components/AiAutomationService";
 import { serviceSchema, faqPageSchema } from "@/lib/schema";
 
 export function generateStaticParams() {
@@ -23,21 +24,22 @@ export async function generateMetadata({
   if (!service) return {};
 
   const url = `/services/${service.slug}`;
+  const title = service.metaTitle ?? service.name;
 
   return {
-    title: service.name,
+    title,
     description: service.metaDescription,
     alternates: {
       canonical: url,
     },
     openGraph: {
-      title: service.name,
+      title,
       description: service.metaDescription,
       url,
     },
     twitter: {
       card: "summary",
-      title: service.name,
+      title,
       description: service.metaDescription,
     },
   };
@@ -53,6 +55,11 @@ export default async function ServicePage({
 
   if (!service) {
     notFound();
+  }
+
+  // AI automation has its own long-form layout; the other tiers share the one below.
+  if (service.slug === "ai-automation") {
+    return <AiAutomationService service={service} />;
   }
 
   const relatedWork = caseStudiesByService(service.slug);

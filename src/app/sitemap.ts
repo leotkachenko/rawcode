@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { siteConfig } from "@/lib/site-config";
 import { services } from "@/lib/services";
 import { caseStudies } from "@/lib/case-studies";
+import { solutionPages } from "@/lib/solution-pages";
 
 // Bump when page content changes materially. Google ignores lastmod that changes
 // on every build, so this is a hand-set date, not new Date().
@@ -40,5 +41,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     changeFrequency: "monthly" as const,
   }));
 
-  return [...staticRoutes, ...serviceRoutes, ...caseStudyRoutes];
+  const solutionRoutes = solutionPages.map((page) => ({
+    url: `${siteConfig.url}${page.path}`,
+    lastModified: CONTENT_UPDATED,
+    priority: 0.8,
+    changeFrequency: "monthly" as const,
+  }));
+
+  return [...staticRoutes, ...serviceRoutes, ...solutionRoutes, ...caseStudyRoutes];
 }
