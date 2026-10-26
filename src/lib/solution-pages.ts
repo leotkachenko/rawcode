@@ -243,6 +243,282 @@ export const solutionPages: SolutionPage[] = [
       detail: "On a free call we'll map out which pages your site needs and what it costs.",
     },
   },
+  {
+    path: "/speech-to-text-development-toronto",
+    title: "Speech-to-Text Development Toronto: Transcription",
+    description:
+      "Custom speech-to-text development in Toronto: transcripts with speaker labels, translation, and searchable audio, built by our ML lead on WhisperX and Azure.",
+    h1: "Speech-to-Text Development in Toronto",
+    navLabel: "Speech-to-text",
+    serviceType: "Speech-to-text development",
+    parentService: "ai-automation",
+    lede: "A transcription app gives you a text file. The speech systems our ML lead builds go further: who said what, an English translation, and a way to find the part of the recording you need.",
+    intro:
+      "Below are three speech projects: a video analysis prototype for MTV, a multilingual transcription and search system for War of Words, and speech research for TietoEvry.",
+    projectsHeading: "Speech and audio projects",
+    projectSlugs: [
+      "war-of-words-video-transcription",
+      "mtv-video-analysis",
+      "tietoevry-speech-face-recognition",
+    ],
+    patternsHeading: "What goes into a speech pipeline",
+    patterns: [
+      {
+        title: "Transcripts that show who's speaking",
+        detail:
+          "War of Words' pipeline runs on AzureML. WhisperX turns speech into text, and PyAnnote adds speaker diarization, so the transcript marks where one speaker stops and the next starts.",
+        slug: "war-of-words-video-transcription",
+      },
+      {
+        title: "Translation in the same pipeline",
+        detail:
+          "The same system translates transcripts into English through the ChatGPT API, with prompts written to keep each passage's context. Translation isn't a separate step someone runs afterwards.",
+        slug: "war-of-words-video-transcription",
+      },
+      {
+        title: "Finding the right segment",
+        detail:
+          "Audio embeddings sit in a MongoDB vector database, so staff can search for segments similar to the one they have, across languages, instead of scrubbing through hours of video.",
+        slug: "war-of-words-video-transcription",
+      },
+      {
+        title: "From transcript to metadata",
+        detail:
+          "For MTV, the prototype transcribed video with WhisperX, then used the ChatGPT API to summarize and analyze the text and produce metadata automatically. It ran as a FastAPI backend in Docker on Azure.",
+        slug: "mtv-video-analysis",
+      },
+    ],
+    credit: PAVLO_CREDIT,
+    faqs: [
+      {
+        question: "What is speaker diarization?",
+        answer:
+          "Diarization labels which speaker said each part of a recording. A plain transcript runs everyone together; a diarized one splits it by speaker. The War of Words system uses PyAnnote for this.",
+      },
+      {
+        question: "Which languages can it transcribe?",
+        answer:
+          "Whisper-based models cover dozens of languages, but accuracy depends on the language and the audio quality. The War of Words system handles video in several languages and translates the transcripts into English. We test on a sample of your recordings before quoting.",
+      },
+      {
+        question: "How much does custom speech-to-text cost?",
+        answer: `Speech projects fall under our AI automation work, which runs ${price("ai-automation")}. A transcription pipeline over one source is at the low end; adding diarization, translation, and search moves it up.`,
+      },
+      {
+        question: "Can the audio stay on our own servers?",
+        answer:
+          "Transcription can. WhisperX is open-source and can run on infrastructure you control. Steps like translation through the ChatGPT API send text to a third party. Where each step runs is decided at scoping, before anything is built.",
+      },
+      {
+        question: "Are recordings of people personal information?",
+        answer:
+          "They can be, under Canadian privacy laws such as PIPEDA and Quebec's Law 25. What gets stored, for how long, and who can search it should be checked against your own obligations before the system goes live.",
+      },
+    ],
+    cta: {
+      title: "Have a pile of recordings nobody has time to go through?",
+      detail: "Send a short sample and we'll tell you on a free call what a pipeline for it would take.",
+    },
+  },
+  {
+    path: "/interior-designer-website-design-toronto",
+    title: "Interior Designer Website Design Toronto",
+    description:
+      "Website design for Toronto interior designers: portfolio, service, and city pages, a process section, and a blog. One studio's site we maintain has 79 pages.",
+    h1: "Interior Designer Website Design in Toronto",
+    navLabel: "Interior designer websites",
+    serviceType: "Interior designer website design",
+    parentService: "seo-geo-website-builds",
+    lede: "An interior design site gets judged on its photos but found through its pages. Someone searching \"condo interior design toronto\" needs a page about exactly that, not a homepage slideshow.",
+    intro:
+      "We maintain the site for YaDesign Studio, an interior design studio in Toronto and Los Angeles. As of October 2026 it has 79 pages, in English and Ukrainian.",
+    projectsHeading: "Interior design site we maintain",
+    projectSlugs: ["yadesign-studio"],
+    patternsHeading: "What's on an interior designer's site that gets found",
+    patterns: [
+      {
+        title: "A page for each kind of project",
+        detail:
+          "YaDesign has separate Toronto pages for condo, kitchen, bathroom, luxury, and home renovation interior design, plus a cost page and a consultation page. Each one matches a search people type.",
+        slug: "yadesign-studio",
+      },
+      {
+        title: "One page for every city you take clients in",
+        detail:
+          "Toronto, Mississauga, Brampton, Markham, Vaughan, Richmond Hill, Oakville, and Burlington each get their own page, and so does Los Angeles for the studio's second market.",
+        slug: "yadesign-studio",
+      },
+      {
+        title: "Projects with their own pages",
+        detail:
+          "Five portfolio projects each have a page of their own instead of sitting in a single gallery, so every project can be linked to, shared, and found.",
+        slug: "yadesign-studio",
+      },
+      {
+        title: "Services and process spelled out",
+        detail:
+          "Six service pages, from residential to hospitality interiors and virtual consultations, and a four-step process section covering discovery, concept, design, and delivery.",
+        slug: "yadesign-studio",
+      },
+      {
+        title: "A blog that answers what clients ask",
+        detail:
+          "Posts cover questions like how much interior design costs, 2026 colour trends, and the Interior Design Show Toronto: the questions people look up before hiring a designer.",
+        slug: "yadesign-studio",
+      },
+    ],
+    faqs: [
+      {
+        question: "How much does a website for an interior designer cost?",
+        answer: `A full SEO/GEO site is ${price("seo-geo-website-builds").toLowerCase()}, depending on how many services, cities, and projects it covers. A single portfolio landing page fits our Small Builds tier at ${price("small-builds")}. The quote is fixed before work starts.`,
+      },
+      {
+        question: "Which pages should an interior designer's website have?",
+        answer:
+          "A page per service, a page per type of project you take on, a page for each city you work in, a page for each portfolio project, a short process section, and a cost page. That's the shape of the YaDesign Studio site.",
+      },
+      {
+        question: "Can the site be in more than one language?",
+        answer:
+          "Yes. YaDesign Studio runs a Ukrainian version beside the English one, each under its own URLs.",
+      },
+      {
+        question: "Does each portfolio project need its own page?",
+        answer:
+          "It helps. A project on its own page can carry its own title, photos, and description, and can be linked to directly. Projects tucked into one gallery can't. YaDesign Studio gives each of its five projects a page.",
+      },
+    ],
+    cta: {
+      title: "Tell us what you design and where",
+      detail: "On a free call we'll sketch out the pages your site needs and what it costs.",
+    },
+  },
+  {
+    path: "/multilingual-website-development-toronto",
+    title: "Multilingual Website Development Toronto",
+    description:
+      "Multilingual website development in Toronto: separate URLs and hreflang tags for every language. One app site we maintain runs in 8, from French to Ukrainian.",
+    h1: "Multilingual Website Development in Toronto",
+    navLabel: "Multilingual websites",
+    serviceType: "Multilingual website development",
+    parentService: "seo-geo-website-builds",
+    lede: "A translate button isn't a multilingual site. Search engines index a language properly when it has its own URLs, its own titles, and tags saying which version is which.",
+    intro:
+      "NovelMaker, a bedtime-story app we built and maintain, publishes its site in 8 languages. YaDesign Studio, a Toronto interior design studio whose site we maintain, runs Ukrainian beside English.",
+    projectsHeading: "Multilingual sites we maintain",
+    projectSlugs: ["novelmaker", "yadesign-studio"],
+    patternsHeading: "How a multilingual site is put together",
+    patterns: [
+      {
+        title: "Its own URLs for every language",
+        detail:
+          "NovelMaker's pages live under /en, /fr, /es, /de, /pl, /tr, /uk, and /ru, with about 20 pages in each language. Google can index the French site as a French site.",
+        slug: "novelmaker",
+      },
+      {
+        title: "hreflang tags on every page",
+        detail:
+          "NovelMaker's pages carry hreflang tags for all 8 language versions plus an x-default, which tell search engines which version to show a searcher in which language.",
+        slug: "novelmaker",
+      },
+      {
+        title: "A second language for a local business",
+        detail:
+          "Not every site needs 8 languages. YaDesign Studio runs a Ukrainian version of its main pages under /uk, beside the English site.",
+        slug: "yadesign-studio",
+      },
+    ],
+    faqs: [
+      {
+        question: "What is hreflang?",
+        answer:
+          "hreflang is a tag in a page's code that lists the other language versions of that page. Search engines use it to show French speakers the French page and English speakers the English one, instead of treating the translations as duplicate content.",
+      },
+      {
+        question: "Do I need a French version if I sell in Quebec?",
+        answer:
+          "Possibly. Quebec's Charter of the French Language sets requirements for commercial content aimed at Quebec customers. Check your situation with a lawyer; we can build the French side either way.",
+      },
+      {
+        question: "Who does the translation?",
+        answer:
+          "That's agreed at scoping. You can supply translations or use a translation agency, and we build the site so each language is easy to update on its own.",
+      },
+      {
+        question: "How much does a multilingual website cost?",
+        answer: `It's ${price("seo-geo-website-builds").toLowerCase()}: the main driver is how many pages each language has, not the number of languages alone. The quote is fixed before work starts.`,
+      },
+    ],
+    cta: {
+      title: "Which languages do your customers speak?",
+      detail: "On a free call we'll work out the URL structure and what each language adds to the cost.",
+    },
+  },
+  {
+    path: "/mvp-development-toronto",
+    title: "MVP Development Toronto: Fixed-Price Builds",
+    description: `MVP development in Toronto with the price fixed before work starts: ${price("small-builds")} for one feature, ${price("fixed-scope-builds")} for a full app. NovelMaker is an app we built.`,
+    h1: "MVP Development in Toronto",
+    navLabel: "MVP development",
+    serviceType: "MVP development",
+    parentService: "fixed-scope-builds",
+    lede: "The point of an MVP is to find out fast whether anyone wants it. That only works if the price and the scope are fixed before the first line of code.",
+    intro:
+      "NovelMaker is a consumer app we built and still maintain. Parents record a five-minute voice sample, pick a story theme, and the app plays a new bedtime story narrated in their voice.",
+    projectsHeading: "An app we built and maintain",
+    projectSlugs: ["novelmaker"],
+    patternsHeading: "What NovelMaker shows about building an MVP",
+    patterns: [
+      {
+        title: "A simple flow in front of an AI pipeline",
+        detail:
+          "For parents it's three steps: voice setup, pick a theme, play at bedtime. Behind that sits the story generation pipeline, the product design, and the onboarding flow we built.",
+        slug: "novelmaker",
+      },
+      {
+        title: "Published in 8 languages",
+        detail:
+          "The marketing site runs in English, French, Spanish, German, Polish, Turkish, Ukrainian, and Russian, each with its own pages.",
+        slug: "novelmaker",
+      },
+      {
+        title: "Built to keep growing after launch",
+        detail:
+          "The site now has 174 pages, with bedtime guides, a blog, and an FAQ, and we still maintain it.",
+        slug: "novelmaker",
+      },
+    ],
+    faqs: [
+      {
+        question: "How much does MVP development cost in Toronto?",
+        answer: `With us, one well-defined MVP feature is a Small Build at ${price("small-builds")}. A full app built from a written spec is a Fixed-Scope Build at ${price("fixed-scope-builds")}. Either way the price is fixed before development starts.`,
+      },
+      {
+        question: "Should my MVP be a Small Build or a Fixed-Scope Build?",
+        answer:
+          "If you can test the idea with one screen or one feature, start with a Small Build. If users need a full product to judge it, with accounts, onboarding, and several features, it's a Fixed-Scope Build.",
+      },
+      {
+        question: "Who owns the code?",
+        answer:
+          "You get the full source code and deployment access at handoff, on both tiers.",
+      },
+      {
+        question: "How long does an MVP take?",
+        answer:
+          "A Small Build takes days to a couple of weeks. A Fixed-Scope Build's timeline is set in the quote, alongside the price, once the spec is written.",
+      },
+      {
+        question: "Can the MVP include AI features?",
+        answer:
+          "Yes. NovelMaker's core is an AI story generation pipeline. AI features are scoped like any other feature, with a fixed price.",
+      },
+    ],
+    cta: {
+      title: "Got an idea you want to test?",
+      detail: "On a free call we'll work out the smallest version worth building and put a price on it.",
+    },
+  },
 ];
 
 export function getSolutionPage(path: string): SolutionPage {

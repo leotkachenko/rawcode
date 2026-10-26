@@ -76,7 +76,7 @@ export function SolutionPageView({ page }: { page: SolutionPage }) {
 
       <section className="mt-20">
         <h2 className="text-2xl font-semibold tracking-tight">{page.projectsHeading}</h2>
-        <div className="mt-6 grid gap-6 sm:grid-cols-2">
+        <div className={projects.length === 1 ? "mt-6 max-w-md" : "mt-6 grid gap-6 sm:grid-cols-2"}>
           {projects.map((project) => (
             <ClientCard key={project.slug} project={project} />
           ))}

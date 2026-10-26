@@ -6,7 +6,7 @@ import { solutionPages } from "@/lib/solution-pages";
 
 // Bump when page content changes materially. Google ignores lastmod that changes
 // on every build, so this is a hand-set date, not new Date().
-const CONTENT_UPDATED = "2026-10-12";
+const CONTENT_UPDATED = "2026-10-26";
 
 const STATIC_ROUTES: { path: string; priority: number; changeFrequency: MetadataRoute.Sitemap[number]["changeFrequency"] }[] = [
   { path: "", priority: 1.0, changeFrequency: "weekly" },

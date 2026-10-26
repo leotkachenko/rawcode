@@ -73,7 +73,7 @@ export function Footer() {
         className="mx-auto max-w-5xl px-6 pb-6 text-sm text-black/60 dark:text-white/60"
       >
         <p className="font-semibold text-black dark:text-white">In Toronto</p>
-        <ul className="mt-2 flex flex-wrap gap-x-5 gap-y-2">
+        <ul className="mt-2 flex flex-wrap gap-x-5 gap-y-3">
           {torontoLinks.map((link) => (
             <li key={link.href}>
               <Link href={link.href} className="hover:text-black dark:hover:text-white">
